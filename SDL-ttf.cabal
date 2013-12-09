@@ -1,0 +1,26 @@
+Cabal-Version:      >= 1.6
+Name:               SDL2-ttf
+Version:            0.1.0
+Maintainer:         Ömer Sinan Ağacan (omeragacan@gmail.com)
+Author:             Ömer Sinan Ağacan (omeragacan@gmail.com)
+License-File:       LICENSE
+License:            MIT
+Build-Type:         Custom
+Category:           Foreign binding
+Synopsis:           Binding to libSDL-ttf
+Description:        TODO
+Data-files:
+Extra-Source-files: configure, configure.ac, SDL-ttf.buildinfo.in, config.mk.in, includes/HsSDL-ttfConfig.h.in
+
+Library
+  Hs-source-dir:    src
+  Build-Depends:    base >= 3 && < 5, SDL2
+  Extensions:       ForeignFunctionInterface
+  Exposed-Modules:  Graphics.UI.SDL.TTF.Types,
+                    Graphics.UI.SDL.TTF.FFI
+                    Graphics.UI.SDL.TTF
+  GHC-Options:      -Wall
+
+source-repository head
+    type:     git
+    location: https://github.com/osa1/hsSDL2-ttf
