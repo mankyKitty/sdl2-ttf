@@ -5,6 +5,7 @@ import Foreign.C
 import Foreign.Ptr
 
 import qualified Graphics.UI.SDL.Types as SDL
+import Graphics.UI.SDL.Color
 
 newtype TTFFontPtr = TTFFontPtr (Ptr ())
 
@@ -62,18 +63,8 @@ foreign import ccall unsafe "TTF_SizeUTF8"
 foreign import ccall unsafe "TTF_SizeUNICODE"
   sizeUNICODE :: TTFFontPtr -> CString -> Ptr CInt -> Ptr CInt -> IO CInt
 
+foreign import ccall unsafe "TTF_RenderText_Solid1"
+  renderTextSolid :: TTFFontPtr -> CString -> Ptr Color -> IO (Ptr SDL.SurfaceStruct)
 
--- TODO: third argument of TTF_Render* functions are actually a struct,
--- not a struct pointer. I have no idea how to implement that using Haskell
--- FFI because apparently there's no way to easily do that.
---
--- Instead, I'm doing this: SDL_Color struct has 4 Uint8 members and I'm
--- assuming that takes 32bits, so I'm using 32bit integers instead.
-foreign import ccall unsafe "TTF_RenderText_Solid"
-  renderTextSolid :: TTFFontPtr -> CString -> CInt -> IO (Ptr SDL.SurfaceStruct)
-
-foreign import ccall unsafe "TTF_RenderUTF8_Solid"
-  renderUTF8Solid :: TTFFontPtr -> CString -> CInt -> IO (Ptr SDL.SurfaceStruct)
-
-foreign import ccall unsafe "TTF_RenderUNICODE_Solid"
-  renderUNICODESolid :: TTFFontPtr -> CString -> CInt -> IO (Ptr SDL.SurfaceStruct)
+foreign import ccall unsafe "TTF_RenderUTF8_Solid1"
+  renderUTF8Solid :: TTFFontPtr -> CString -> Ptr Color -> IO (Ptr SDL.SurfaceStruct)

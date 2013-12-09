@@ -20,6 +20,8 @@ Library
                     Graphics.UI.SDL.TTF.FFI
                     Graphics.UI.SDL.TTF
   GHC-Options:      -Wall
+  include-dirs:     cbits
+  C-sources:        cbits/rendering.c
 
 source-repository head
     type:     git

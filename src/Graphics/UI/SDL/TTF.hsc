@@ -78,5 +78,17 @@ sizeUNICODE :: TTFFont -> String -> IO (Int, Int)
 sizeUNICODE = peekInts FFI.sizeUNICODE
 
 renderTextSolid :: TTFFont -> String -> Color -> IO Surface
-renderTextSolid (TTFFont fontPtr) text fg = withCString text $ \cstr ->
-    mkFinalizedSurface =<< FFI.renderTextSolid fontPtr cstr undefined
+renderTextSolid (TTFFont fontPtr) text fg = withCString text $ \cstr -> do
+    colorPtr <- malloc
+    poke colorPtr fg
+    ret <- mkFinalizedSurface =<< FFI.renderTextSolid fontPtr cstr colorPtr
+    free colorPtr
+    return ret
+
+renderUTF8Solid :: TTFFont -> String -> Color -> IO Surface
+renderUTF8Solid (TTFFont fontPtr) text fg = withCString text $ \cstr -> do
+    colorPtr <- malloc
+    poke colorPtr fg
+    ret <- mkFinalizedSurface =<< FFI.renderUTF8Solid fontPtr cstr colorPtr
+    free colorPtr
+    return ret
