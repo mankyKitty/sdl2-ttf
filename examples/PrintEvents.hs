@@ -7,6 +7,7 @@ import Control.Monad.State.Strict
 import Graphics.UI.SDL as SDL
 import Graphics.UI.SDL.Image as Image
 import Graphics.UI.SDL.TTF as TTF
+import Graphics.UI.SDL.TTF.Types as TTF
 
 
 data Text = Text String Color !Int
@@ -22,6 +23,7 @@ main =
     withWindow screenTitle screenPosition screenSize [WindowShown] $ \win ->
     withRenderer win (Device (-1)) [Accelerated] $ \renderer -> do
       font <- TTF.openFont "/usr/share/fonts/truetype/DroidSans.ttf" 13
+      TTF.setFontStyle font TTF.TTFBold
       time <- getTicks
       evalStateT (mainLoop win renderer time font) []
 
@@ -78,7 +80,7 @@ draw font renderer ts = iter ts 50 50
   where
     iter [] _ _ = return ()
     iter (Text str color _ : ts) x y = do
-      textSurface <- TTF.renderTextSolid font str color
+      textSurface <- TTF.renderUTF8Solid font str color
       textTexture <- SDL.createTextureFromSurface renderer textSurface
       (width, height) <- TTF.sizeText font str
       renderCopy renderer textTexture Nothing (Just $ Rect x y width height)
