@@ -1,4 +1,4 @@
-#include "SDL_ttf.h"
+#include "SDL2/SDL_ttf.h"
 module Graphics.UI.SDL.TTF.FFI where
 
 import Foreign.C
@@ -6,6 +6,12 @@ import Foreign.Ptr
 
 import qualified Graphics.UI.SDL.Types as SDL
 import Graphics.UI.SDL.Color
+
+foreign import ccall unsafe "TTF_Init"
+  init :: IO CInt
+
+foreign import ccall unsafe "TTF_Quit"
+  quit :: IO ()
 
 newtype TTFFontPtr = TTFFontPtr (Ptr ())
 

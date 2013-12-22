@@ -3,17 +3,35 @@ module Graphics.UI.SDL.TTF where
 import Foreign.C.String
 import Foreign.Marshal.Alloc
 import Foreign.Storable
+import Foreign.Ptr
 import Control.Monad
 import Data.Int
 
-import Graphics.UI.SDL.TTF.FFI as FFI
+import qualified Graphics.UI.SDL.TTF.FFI as FFI
 import Graphics.UI.SDL.TTF.Types
 import Graphics.UI.SDL.Types
 import Graphics.UI.SDL.Color
 import Graphics.UI.SDL.Video (mkFinalizedSurface)
+import Graphics.UI.SDL.General (getError)
+
+import Prelude hiding (init)
+
+init :: IO ()
+init = do
+    ret <- FFI.init
+    when (ret < 0) $ error . (\s -> "init: " ++ show s) =<< getError
+
+quit :: IO ()
+quit = FFI.quit
+
+withInit :: IO a -> IO a
+withInit a = do init; ret <- a; quit; return ret
 
 openFont :: String -> Int -> IO TTFFont
-openFont file ptsize = withCString file $ \cstr -> liftM TTFFont $ FFI.openFont cstr (fromIntegral ptsize)
+openFont file ptsize = withCString file $ \cstr -> do
+    FFI.TTFFontPtr ptr <- FFI.openFont cstr (fromIntegral ptsize)
+    when (ptr == nullPtr) $ error . (\s -> "openFont: " ++ show s) =<< getError
+    return $ TTFFont (FFI.TTFFontPtr ptr)
 
 openFontIndex :: String -> Int -> Int -> IO TTFFont
 openFontIndex file ptsize index = withCString file $ \cstr -> liftM TTFFont $ FFI.openFontIndex cstr (fromIntegral ptsize) (fromIntegral index)
@@ -81,7 +99,9 @@ renderTextSolid :: TTFFont -> String -> Color -> IO Surface
 renderTextSolid (TTFFont fontPtr) text fg = withCString text $ \cstr -> do
     colorPtr <- malloc
     poke colorPtr fg
-    ret <- mkFinalizedSurface =<< FFI.renderTextSolid fontPtr cstr colorPtr
+    ptr <- FFI.renderTextSolid fontPtr cstr colorPtr
+    when (ptr == nullPtr) $ error . show =<< getError
+    ret <- mkFinalizedSurface ptr
     free colorPtr
     return ret
 

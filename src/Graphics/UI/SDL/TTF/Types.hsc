@@ -1,4 +1,4 @@
-#include "SDL_ttf.h"
+#include "SDL2/SDL_ttf.h"
 {-# LANGUAGE EmptyDataDecls #-}
 module Graphics.UI.SDL.TTF.Types where
 
