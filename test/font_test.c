@@ -19,7 +19,7 @@ int main()
   TTF_Init();
 
   SDL_Window *window = SDL_CreateWindow("test", 100, 100, 640, 480, SDL_WINDOW_SHOWN);
-  SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
+  SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
   TTF_Font *font = TTF_OpenFont("/usr/share/fonts/truetype/DroidSans.ttf", 13);
   if (font == NULL)
@@ -30,10 +30,15 @@ int main()
   if (textSurface == NULL)
     printf("null text surface\n");
 
+  SDL_Texture *textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+  if (textTexture == NULL)
+    printf("null text texture\n");
+
+  SDL_Rect rect = { 0, 0, 640, 480 };
+
   while (handle_event() == 0) {
     SDL_RenderClear(renderer);
-    SDL_Surface *windowSurface = SDL_GetWindowSurface(window);
-    SDL_BlitSurface(textSurface, NULL, windowSurface, NULL);
+    SDL_RenderCopy(renderer, textTexture, &rect, &rect);
     SDL_RenderPresent(renderer);
   }
 
