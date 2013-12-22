@@ -18,7 +18,7 @@ Library
   Exposed-Modules:  Graphics.UI.SDL.TTF.Types,
                     Graphics.UI.SDL.TTF.FFI
                     Graphics.UI.SDL.TTF
-  GHC-Options:      -Wall
+  GHC-Options:      -Wall -O
   include-dirs:     cbits
   C-sources:        cbits/rendering.c
   extra-libraries:  SDL2, SDL2_ttf
