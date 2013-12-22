@@ -72,5 +72,17 @@ foreign import ccall unsafe "TTF_SizeUNICODE"
 foreign import ccall unsafe "TTF_RenderText_Solid1"
   renderTextSolid :: TTFFontPtr -> CString -> Ptr Color -> IO (Ptr SDL.SurfaceStruct)
 
+foreign import ccall unsafe "TTF_RenderText_Shaded"
+  renderTextShaded :: TTFFontPtr -> CString -> Ptr Color -> Ptr Color -> IO (Ptr SDL.SurfaceStruct)
+
+foreign import ccall unsafe "TTF_RenderText_Blended"
+  renderTextBlended :: TTFFontPtr -> CString -> Ptr Color -> IO (Ptr SDL.SurfaceStruct)
+
 foreign import ccall unsafe "TTF_RenderUTF8_Solid1"
   renderUTF8Solid :: TTFFontPtr -> CString -> Ptr Color -> IO (Ptr SDL.SurfaceStruct)
+
+foreign import ccall unsafe "TTF_RenderUTF8_Shaded"
+  renderUTF8Shaded :: TTFFontPtr -> CString -> Ptr Color -> Ptr Color -> IO (Ptr SDL.SurfaceStruct)
+
+foreign import ccall unsafe "TTF_RenderUTF8_Blended"
+  renderUTF8Blended :: TTFFontPtr -> CString -> Ptr Color -> IO (Ptr SDL.SurfaceStruct)
