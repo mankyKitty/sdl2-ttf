@@ -13,14 +13,9 @@ import Graphics.UI.SDL.TTF.Types
 import Graphics.UI.SDL.Types
 import Graphics.UI.SDL.Color
 import Graphics.UI.SDL.Video (mkFinalizedSurface)
-import Graphics.UI.SDL.General (getError)
+import Graphics.UI.SDL.General (getError, handleError)
 
 import Prelude hiding (init)
-
-
-handleError fname ptr fn
-  | ptr == nullPtr = (\err -> error $ fname ++ ": " ++ show err) =<< getError
-  | otherwise      = fn ptr
 
 
 init :: IO ()
