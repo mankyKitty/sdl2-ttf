@@ -12,8 +12,9 @@ import qualified Graphics.UI.SDL.TTF.FFI as FFI
 import Graphics.UI.SDL.TTF.Types
 import Graphics.UI.SDL.Types
 import Graphics.UI.SDL.Color
-import Graphics.UI.SDL.Video (mkFinalizedSurface)
-import Graphics.UI.SDL.General (getError, handleError)
+import Graphics.UI.SDL.Surface (mkFinalizedSurface)
+import Graphics.UI.SDL.Error (getError)
+import Graphics.UI.SDL.General (handleError)
 
 import Prelude hiding (init)
 
