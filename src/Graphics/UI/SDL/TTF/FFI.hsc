@@ -7,85 +7,85 @@ import Foreign.Ptr
 import qualified Graphics.UI.SDL.Types as SDL
 import Graphics.UI.SDL.Types (Color)
 
+type TTFFont = Ptr ()
+
 foreign import ccall unsafe "TTF_Init"
   init :: IO CInt
 
 foreign import ccall unsafe "TTF_Quit"
   quit :: IO ()
 
-newtype TTFFontPtr = TTFFontPtr (Ptr ())
-
 foreign import ccall unsafe "TTF_OpenFont"
-  openFont :: CString -> CInt -> IO TTFFontPtr
+  openFont :: CString -> CInt -> IO TTFFont
 
 foreign import ccall unsafe "TTF_CloseFont"
-  closeFont :: TTFFontPtr -> IO ()
+  closeFont :: TTFFont -> IO ()
  
 foreign import ccall unsafe "TTF_OpenFontIndex"
-  openFontIndex :: CString -> CInt -> CInt -> IO TTFFontPtr
+  openFontIndex :: CString -> CInt -> CInt -> IO TTFFont
 
 foreign import ccall unsafe "TTF_GetFontStyle"
-  getFontStyle :: TTFFontPtr -> IO CInt
+  getFontStyle :: TTFFont -> IO CInt
 
 foreign import ccall unsafe "TTF_SetFontStyle"
-  setFontStyle :: TTFFontPtr -> CInt -> IO ()
+  setFontStyle :: TTFFont -> CInt -> IO ()
 
 foreign import ccall unsafe "TTF_GetFontHinting"
-  getFontHinting :: TTFFontPtr -> IO CInt
+  getFontHinting :: TTFFont -> IO CInt
 
 foreign import ccall unsafe "TTF_SetFontHinting"
-  setFontHinting :: TTFFontPtr -> CInt -> IO ()
+  setFontHinting :: TTFFont -> CInt -> IO ()
 
 foreign import ccall unsafe "TTF_FontHeight"
-  getFontHeight :: TTFFontPtr -> IO CInt
+  getFontHeight :: TTFFont -> IO CInt
 
 foreign import ccall unsafe "TTF_FontAscent"
-  getFontAscent :: TTFFontPtr -> IO CInt
+  getFontAscent :: TTFFont -> IO CInt
 
 foreign import ccall unsafe "TTF_FontDescent"
-  getFontDescent :: TTFFontPtr -> IO CInt
+  getFontDescent :: TTFFont -> IO CInt
 
 foreign import ccall unsafe "TTF_GetFontKerning"
-  getFontKerning :: TTFFontPtr -> IO CInt
+  getFontKerning :: TTFFont -> IO CInt
 
 foreign import ccall unsafe "TTF_SetFontKerning"
-  setFontKerning :: TTFFontPtr -> CInt -> IO ()
+  setFontKerning :: TTFFont -> CInt -> IO ()
 
 foreign import ccall unsafe "TTF_FontFaces"
-  fontFaces :: TTFFontPtr -> IO CLong
+  fontFaces :: TTFFont -> IO CLong
 
 foreign import ccall unsafe "TTF_FontFaceIsFixedWidth"
-  fontFaceIsFixedWidth :: TTFFontPtr -> IO CInt
+  fontFaceIsFixedWidth :: TTFFont -> IO CInt
 
 foreign import ccall unsafe "TTF_FontFaceFamilyName"
-  fontFaceFamilyName :: TTFFontPtr -> IO CString
+  fontFaceFamilyName :: TTFFont -> IO CString
 
 foreign import ccall unsafe "TTF_FontFaceStyleName"
-  fontFaceStyleName :: TTFFontPtr -> IO CString
+  fontFaceStyleName :: TTFFont -> IO CString
 
 foreign import ccall unsafe "TTF_SizeText"
-  sizeText :: TTFFontPtr -> CString -> Ptr CInt -> Ptr CInt -> IO CInt
+  sizeText :: TTFFont -> CString -> Ptr CInt -> Ptr CInt -> IO CInt
 
 foreign import ccall unsafe "TTF_SizeUTF8"
-  sizeUTF8 :: TTFFontPtr -> CString -> Ptr CInt -> Ptr CInt -> IO CInt
+  sizeUTF8 :: TTFFont -> CString -> Ptr CInt -> Ptr CInt -> IO CInt
 
 foreign import ccall unsafe "TTF_SizeUNICODE"
-  sizeUNICODE :: TTFFontPtr -> CString -> Ptr CInt -> Ptr CInt -> IO CInt
+  sizeUNICODE :: TTFFont -> CString -> Ptr CInt -> Ptr CInt -> IO CInt
 
 foreign import ccall unsafe "TTF_RenderText_Solid1"
-  renderTextSolid :: TTFFontPtr -> CString -> Ptr Color -> IO (Ptr SDL.Surface)
+  renderTextSolid :: TTFFont -> CString -> Ptr Color -> IO (Ptr SDL.Surface)
 
 foreign import ccall unsafe "TTF_RenderText_Shaded1"
-  renderTextShaded :: TTFFontPtr -> CString -> Ptr Color -> Ptr Color -> IO (Ptr SDL.Surface)
+  renderTextShaded :: TTFFont -> CString -> Ptr Color -> Ptr Color -> IO (Ptr SDL.Surface)
 
 foreign import ccall unsafe "TTF_RenderText_Blended1"
-  renderTextBlended :: TTFFontPtr -> CString -> Ptr Color -> IO (Ptr SDL.Surface)
+  renderTextBlended :: TTFFont -> CString -> Ptr Color -> IO (Ptr SDL.Surface)
 
 foreign import ccall unsafe "TTF_RenderUTF8_Solid1"
-  renderUTF8Solid :: TTFFontPtr -> CString -> Ptr Color -> IO (Ptr SDL.Surface)
+  renderUTF8Solid :: TTFFont -> CString -> Ptr Color -> IO (Ptr SDL.Surface)
 
 foreign import ccall unsafe "TTF_RenderUTF8_Shaded1"
-  renderUTF8Shaded :: TTFFontPtr -> CString -> Ptr Color -> Ptr Color -> IO (Ptr SDL.Surface)
+  renderUTF8Shaded :: TTFFont -> CString -> Ptr Color -> Ptr Color -> IO (Ptr SDL.Surface)
 
 foreign import ccall unsafe "TTF_RenderUTF8_Blended1"
-  renderUTF8Blended :: TTFFontPtr -> CString -> Ptr Color -> IO (Ptr SDL.Surface)
+  renderUTF8Blended :: TTFFont -> CString -> Ptr Color -> IO (Ptr SDL.Surface)

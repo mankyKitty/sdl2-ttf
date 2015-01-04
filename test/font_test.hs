@@ -43,7 +43,7 @@ createWindow = withCAString "test" $ \t ->
 
 loop :: t -> SDL.Renderer -> SDL.Texture -> IO ()
 loop window renderer textTexture = do
-    let loc = SDL.Rect 0 0 100 50
+    let loc = SDL.Rect 0 0 65 20
     _ <- SDL.renderClear renderer
     _ <- with loc $ \loc' ->
              SDL.renderCopy renderer textTexture nullPtr loc'
