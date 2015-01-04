@@ -5,7 +5,7 @@ import Foreign.C
 import Foreign.Ptr
 
 import qualified Graphics.UI.SDL.Types as SDL
-import Graphics.UI.SDL.Color
+import Graphics.UI.SDL.Types (Color)
 
 foreign import ccall unsafe "TTF_Init"
   init :: IO CInt
@@ -18,6 +18,9 @@ newtype TTFFontPtr = TTFFontPtr (Ptr ())
 foreign import ccall unsafe "TTF_OpenFont"
   openFont :: CString -> CInt -> IO TTFFontPtr
 
+foreign import ccall unsafe "TTF_CloseFont"
+  closeFont :: TTFFontPtr -> IO ()
+ 
 foreign import ccall unsafe "TTF_OpenFontIndex"
   openFontIndex :: CString -> CInt -> CInt -> IO TTFFontPtr
 
@@ -70,19 +73,19 @@ foreign import ccall unsafe "TTF_SizeUNICODE"
   sizeUNICODE :: TTFFontPtr -> CString -> Ptr CInt -> Ptr CInt -> IO CInt
 
 foreign import ccall unsafe "TTF_RenderText_Solid1"
-  renderTextSolid :: TTFFontPtr -> CString -> Ptr Color -> IO (Ptr SDL.SurfaceStruct)
+  renderTextSolid :: TTFFontPtr -> CString -> Ptr Color -> IO (Ptr SDL.Surface)
 
 foreign import ccall unsafe "TTF_RenderText_Shaded1"
-  renderTextShaded :: TTFFontPtr -> CString -> Ptr Color -> Ptr Color -> IO (Ptr SDL.SurfaceStruct)
+  renderTextShaded :: TTFFontPtr -> CString -> Ptr Color -> Ptr Color -> IO (Ptr SDL.Surface)
 
 foreign import ccall unsafe "TTF_RenderText_Blended1"
-  renderTextBlended :: TTFFontPtr -> CString -> Ptr Color -> IO (Ptr SDL.SurfaceStruct)
+  renderTextBlended :: TTFFontPtr -> CString -> Ptr Color -> IO (Ptr SDL.Surface)
 
 foreign import ccall unsafe "TTF_RenderUTF8_Solid1"
-  renderUTF8Solid :: TTFFontPtr -> CString -> Ptr Color -> IO (Ptr SDL.SurfaceStruct)
+  renderUTF8Solid :: TTFFontPtr -> CString -> Ptr Color -> IO (Ptr SDL.Surface)
 
 foreign import ccall unsafe "TTF_RenderUTF8_Shaded1"
-  renderUTF8Shaded :: TTFFontPtr -> CString -> Ptr Color -> Ptr Color -> IO (Ptr SDL.SurfaceStruct)
+  renderUTF8Shaded :: TTFFontPtr -> CString -> Ptr Color -> Ptr Color -> IO (Ptr SDL.Surface)
 
 foreign import ccall unsafe "TTF_RenderUTF8_Blended1"
-  renderUTF8Blended :: TTFFontPtr -> CString -> Ptr Color -> IO (Ptr SDL.SurfaceStruct)
+  renderUTF8Blended :: TTFFontPtr -> CString -> Ptr Color -> IO (Ptr SDL.Surface)
