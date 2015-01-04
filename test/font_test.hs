@@ -19,7 +19,7 @@ main = do
     renderer <- createRenderer window
     
     TTF.withInit $ do
-      font <- TTF.openFont osxArial 12
+      font <- TTF.openFont osxArial 150
       textSurface <- TTF.renderUTF8Solid font "some text" (SDL.Color 255 255 255 0)
       textTexture <- SDL.createTextureFromSurface renderer textSurface
       SDL.freeSurface textSurface
@@ -31,7 +31,7 @@ main = do
       SDL.quit
 
 createRenderer :: SDL.Window -> IO (SDL.Renderer)
-createRenderer w = SDL.createRenderer w (-1) SDL.SDL_RENDERER_ACCELERATED
+createRenderer w = SDL.createRenderer w (-1) 0
 
 createWindow :: IO (SDL.Window)
 createWindow = withCAString "test" $ \t ->
@@ -43,7 +43,7 @@ createWindow = withCAString "test" $ \t ->
 
 loop :: t -> SDL.Renderer -> SDL.Texture -> IO ()
 loop window renderer textTexture = do
-    let loc = SDL.Rect 0 0 65 20
+    let loc = SDL.Rect 320 240 150 100
     _ <- SDL.renderClear renderer
     _ <- with loc $ \loc' ->
              SDL.renderCopy renderer textTexture nullPtr loc'
