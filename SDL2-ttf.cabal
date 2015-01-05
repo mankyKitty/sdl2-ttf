@@ -1,28 +1,34 @@
-Cabal-Version:      >= 1.6
-Name:               SDL2-ttf
-Version:            0.1.0
-Maintainer:         Ömer Sinan Ağacan (omeragacan@gmail.com)
+Cabal-Version:      >= 1.8
+Name:               sdl2-ttf
+Version:            0.2.0
+Maintainer:         Sean Chalmers (sclhiannan@gmail.com)
 Author:             Ömer Sinan Ağacan (omeragacan@gmail.com)
 License-File:       LICENSE
 License:            MIT
 Build-Type:         Simple
 Category:           Foreign binding
-Synopsis:           Binding to libSDL-ttf
+Synopsis:           Binding to libSDL2-ttf
 Description:        TODO
 Data-files:
 
 Library
   Hs-source-dirs:   src
-  Build-Depends:    base >= 3 && < 5, SDL2
+  Build-Depends:    base >= 3 && < 5, sdl2
   Extensions:       ForeignFunctionInterface
   Exposed-Modules:  Graphics.UI.SDL.TTF.Types,
                     Graphics.UI.SDL.TTF.FFI
                     Graphics.UI.SDL.TTF
-  GHC-Options:      -Wall -O
+  GHC-Options:      -Wall -Werror -fwarn-tabs -O
   include-dirs:     cbits
   C-sources:        cbits/rendering.c
   extra-libraries:  SDL2, SDL2_ttf
 
+Executable HSTest
+  main-is:          font_test.hs
+  hs-source-dirs:   test
+  build-depends:    base >= 3 && <5, sdl2, sdl2-ttf
+  GHC-Options:      -Wall -Werror -fwarn-tabs -O
+  
 source-repository head
     type:     git
-    location: https://github.com/osa1/hsSDL2-ttf
+    location: https://github.com/mankyKitty/hsSDL2-ttf

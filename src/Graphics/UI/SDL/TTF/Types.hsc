@@ -2,9 +2,15 @@
 {-# LANGUAGE EmptyDataDecls #-}
 module Graphics.UI.SDL.TTF.Types where
 
-import Graphics.UI.SDL.TTF.FFI as FFI
-
-newtype TTFFont = TTFFont FFI.TTFFontPtr
+data TTFError
+  = RenderUTF8Blended
+  | RenderUTF8Shaded
+  | RenderUTF8Solid
+  | RenderTextBlended
+  | RenderTextShaded
+  | RenderTextSolid
+  | OpenFont
+  deriving Show
 
 data TTFStyle = TTFNormal | TTFBold | TTFItalic | TTFUnderline | TTFStrikethrough
   deriving ( Eq, Ord, Show, Read )
