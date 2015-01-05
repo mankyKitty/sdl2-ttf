@@ -6,11 +6,8 @@ import qualified Graphics.UI.SDL     as SDL
 import Foreign.C.String (withCAString)
 import Foreign (peek,alloca,with,maybePeek,nullPtr)
 
-unixDroidSans :: String
-unixDroidSans = "/usr/share/fonts/truetype/DroidSans.ttf"
-
-osxArial :: String
-osxArial = "/Library/Fonts/Arial.ttf"
+arial :: String
+arial = "./test/ARIAL.TTF"
 
 main :: IO ()
 main = do
@@ -19,7 +16,7 @@ main = do
     renderer <- createRenderer window
     
     TTF.withInit $ do
-      font <- TTF.openFont osxArial 150
+      font <- TTF.openFont arial 150 -- Pt size for retina screen. :<
       textSurface <- TTF.renderUTF8Solid font "some text" (SDL.Color 255 255 255 0)
       textTexture <- SDL.createTextureFromSurface renderer textSurface
       SDL.freeSurface textSurface

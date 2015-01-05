@@ -23,7 +23,8 @@ Library
   C-sources:        cbits/rendering.c
   extra-libraries:  SDL2, SDL2_ttf
 
-Executable HSTest
+test-suite test
+  type:             exitcode-stdio-1.0
   main-is:          font_test.hs
   hs-source-dirs:   test
   build-depends:    base >= 3 && <5, sdl2, sdl2-ttf
@@ -31,4 +32,4 @@ Executable HSTest
   
 source-repository head
     type:     git
-    location: https://github.com/mankyKitty/hsSDL2-ttf
+    location: https://github.com/mankyKitty/sdl2-ttf
