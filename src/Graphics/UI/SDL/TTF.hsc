@@ -1,6 +1,7 @@
 module Graphics.UI.SDL.TTF where
 
 import Foreign.C.String
+import Foreign.C.Types (CInt)
 import Foreign.Marshal.Alloc
 import Foreign.Marshal.Utils
 import Foreign.Storable
@@ -8,76 +9,82 @@ import Foreign.Ptr
 import Control.Monad
 import Data.Int
 
+import Graphics.UI.SDL.TTF.FFI (TTFFont)
+
 import qualified Graphics.UI.SDL.TTF.FFI as FFI
 import Graphics.UI.SDL.TTF.Types
 import Graphics.UI.SDL.Types
-import Graphics.UI.SDL.Color
-import Graphics.UI.SDL.Raw (mkFinalizedSurface)
-import Graphics.UI.SDL.Error (getError)
-import Graphics.UI.SDL.General (handleError)
 
 import Prelude hiding (init)
 
-
-init :: IO ()
-init = do
-    ret <- FFI.init
-    when (ret < 0) $ error . (\s -> "init: " ++ show s) =<< getError
+init :: IO CInt
+init = FFI.init
 
 quit :: IO ()
 quit = FFI.quit
 
 withInit :: IO a -> IO a
-withInit a = do init; ret <- a; quit; return ret
+withInit a = do
+  ret <- init >> a
+  quit
+  return ret
 
 openFont :: String -> Int -> IO TTFFont
-openFont file ptsize = withCString file $ \cstr -> do
-    FFI.TTFFontPtr ptr <- FFI.openFont cstr (fromIntegral ptsize)
-    handleError "openFont" ptr (return . TTFFont . FFI.TTFFontPtr)
+openFont file ptsize = withCString file $ \cstr ->
+    FFI.openFont cstr (fromIntegral ptsize)
+    
+closeFont :: TTFFont -> IO ()
+closeFont fontPtr = FFI.closeFont fontPtr
 
 openFontIndex :: String -> Int -> Int -> IO TTFFont
-openFontIndex file ptsize index = withCString file $ \cstr -> liftM TTFFont $ FFI.openFontIndex cstr (fromIntegral ptsize) (fromIntegral index)
+openFontIndex file ptsize index = withCString file $ \cstr -> 
+  FFI.openFontIndex cstr (fromIntegral ptsize) (fromIntegral index)
 
 getFontStyle :: TTFFont -> IO TTFStyle
-getFontStyle (TTFFont fontPtr) = liftM (toEnum . fromIntegral) $ FFI.getFontStyle fontPtr
+getFontStyle fontPtr = liftM (toEnum . fromIntegral) $ FFI.getFontStyle fontPtr
 
 setFontStyle :: TTFFont -> TTFStyle -> IO ()
-setFontStyle (TTFFont fontPtr) style = FFI.setFontStyle fontPtr (fromIntegral $ fromEnum style)
+setFontStyle fontPtr style = FFI.setFontStyle fontPtr (fromIntegral $ fromEnum style)
 
 getFontHinting :: TTFFont -> IO TTFHinting
-getFontHinting (TTFFont fontPtr) = liftM (toEnum . fromIntegral) $ FFI.getFontHinting fontPtr
+getFontHinting fontPtr = liftM (toEnum . fromIntegral) $ FFI.getFontHinting fontPtr
 
 setFontHinting :: TTFFont -> TTFHinting -> IO ()
-setFontHinting (TTFFont fontPtr) hinting = FFI.setFontHinting fontPtr (fromIntegral $ fromEnum hinting)
+setFontHinting fontPtr hinting = FFI.setFontHinting fontPtr (fromIntegral $ fromEnum hinting)
 
 getFontHeight :: TTFFont -> IO Int
-getFontHeight (TTFFont fontPtr) = liftM fromIntegral $ FFI.getFontHeight fontPtr
+getFontHeight fontPtr = liftM fromIntegral $ FFI.getFontHeight fontPtr
 
 getFontAscent :: TTFFont -> IO Int
-getFontAscent (TTFFont fontPtr) = liftM fromIntegral $ FFI.getFontAscent fontPtr
+getFontAscent fontPtr = liftM fromIntegral $ FFI.getFontAscent fontPtr
 
 getFontDescent :: TTFFont -> IO Int
-getFontDescent (TTFFont fontPtr) = liftM fromIntegral $ FFI.getFontDescent fontPtr
+getFontDescent fontPtr = liftM fromIntegral $ FFI.getFontDescent fontPtr
 
 getFontKerning :: TTFFont -> IO Int
-getFontKerning (TTFFont fontPtr) = liftM fromIntegral $ FFI.getFontKerning fontPtr
+getFontKerning fontPtr = liftM fromIntegral $ FFI.getFontKerning fontPtr
 
 setFontKerning :: TTFFont -> Int -> IO ()
-setFontKerning (TTFFont fontPtr) i = FFI.setFontKerning fontPtr (fromIntegral i)
+setFontKerning fontPtr i = FFI.setFontKerning fontPtr (fromIntegral i)
 
 fontFaces :: TTFFont -> IO Int64
-fontFaces (TTFFont fontPtr) = liftM fromIntegral $ FFI.fontFaces fontPtr
+fontFaces fontPtr = liftM fromIntegral $ FFI.fontFaces fontPtr
 
 fontFaceIsFixedWidth :: TTFFont -> IO Bool
-fontFaceIsFixedWidth (TTFFont fontPtr) = liftM (== 0) $ FFI.fontFaceIsFixedWidth fontPtr
+fontFaceIsFixedWidth fontPtr = liftM (== 0) $ FFI.fontFaceIsFixedWidth fontPtr
 
 fontFaceFamilyName :: TTFFont -> IO String
-fontFaceFamilyName (TTFFont fontPtr) = FFI.fontFaceFamilyName fontPtr >>= peekCString
+fontFaceFamilyName fontPtr = FFI.fontFaceFamilyName fontPtr >>= peekCString
 
 fontFaceStyleName :: TTFFont -> IO String
-fontFaceStyleName (TTFFont fontPtr) = FFI.fontFaceStyleName fontPtr >>= peekCString
+fontFaceStyleName fontPtr = FFI.fontFaceStyleName fontPtr >>= peekCString
 
-peekInts fn (TTFFont fontPtr) text = do
+peekInts 
+  :: (FFI.TTFFont -> CString -> Ptr CInt -> Ptr CInt -> IO CInt)
+  -> TTFFont
+  -> String
+  -> IO (Int,Int)
+peekInts fn fontPtr text = do
     alloca $ \wPtr ->
       alloca $ \hPtr -> do
         -- TODO: handle errors
@@ -95,40 +102,31 @@ sizeUTF8 = peekInts FFI.sizeUTF8
 sizeUNICODE :: TTFFont -> String -> IO (Int, Int)
 sizeUNICODE = peekInts FFI.sizeUNICODE
 
-renderTextSolid :: TTFFont -> String -> Color -> IO Surface
-renderTextSolid (TTFFont fontPtr) text fg = withCString text $ \cstr -> do
-    with fg $ \colorPtr -> do
-      ptr <- FFI.renderTextSolid fontPtr cstr colorPtr
-      handleError "renderTextSolid" ptr mkFinalizedSurface
+renderTextSolid :: TTFFont -> String -> Color -> IO (Ptr Surface)
+renderTextSolid fontPtr text fg = withCString text $ \cstr -> do
+    with fg $ \colorPtr -> FFI.renderTextSolid fontPtr cstr colorPtr
 
-renderTextShaded :: TTFFont -> String -> Color -> Color -> IO Surface
-renderTextShaded (TTFFont fontPtr) text fg bg = withCString text $ \cstr ->
+renderTextShaded :: TTFFont -> String -> Color -> Color -> IO (Ptr Surface)
+renderTextShaded fontPtr text fg bg = withCString text $ \cstr ->
     with fg $ \fgColorPtr ->
-      with bg $ \bgColorPtr -> do
-        ptr <- FFI.renderTextShaded fontPtr cstr fgColorPtr bgColorPtr
-        handleError "renderTextShaded" ptr mkFinalizedSurface
+      with bg $ \bgColorPtr ->
+        FFI.renderTextShaded fontPtr cstr fgColorPtr bgColorPtr
 
-renderTextBlended :: TTFFont -> String -> Color -> IO Surface
-renderTextBlended (TTFFont fontPtr) text color = withCString text $ \cstr ->
-    with color $ \colorPtr -> do
-      ptr <- FFI.renderTextBlended fontPtr cstr colorPtr
-      handleError "renderTextBlended" ptr mkFinalizedSurface
+renderTextBlended :: TTFFont -> String -> Color -> IO (Ptr Surface)
+renderTextBlended fontPtr text color = withCString text $ \cstr ->
+    with color $ \colorPtr -> FFI.renderTextBlended fontPtr cstr colorPtr
 
-renderUTF8Solid :: TTFFont -> String -> Color -> IO Surface
-renderUTF8Solid (TTFFont fontPtr) text fg = withCString text $ \cstr -> do
-    with fg $ \colorPtr -> do
-      ptr <- FFI.renderUTF8Solid fontPtr cstr colorPtr
-      handleError "renderUTF8Solid" ptr mkFinalizedSurface
+renderUTF8Solid :: TTFFont -> String -> Color -> IO (Ptr Surface)
+renderUTF8Solid fontPtr text fg = withCString text $ \cstr -> do
+    with fg $ \colorPtr -> FFI.renderUTF8Solid fontPtr cstr colorPtr
 
-renderUTF8Shaded :: TTFFont -> String -> Color -> Color -> IO Surface
-renderUTF8Shaded (TTFFont fontPtr) text fg bg = withCString text $ \cstr ->
+renderUTF8Shaded :: TTFFont -> String -> Color -> Color -> IO (Ptr Surface)
+renderUTF8Shaded fontPtr text fg bg = withCString text $ \cstr ->
     with fg $ \fgColorPtr ->
-      with bg $ \bgColorPtr -> do
-        ptr <- FFI.renderUTF8Shaded fontPtr cstr fgColorPtr bgColorPtr
-        handleError "renderUTF8Shaded" ptr mkFinalizedSurface
+      with bg $ \bgColorPtr ->
+        FFI.renderUTF8Shaded fontPtr cstr fgColorPtr bgColorPtr
 
-renderUTF8Blended :: TTFFont -> String -> Color -> IO Surface
-renderUTF8Blended (TTFFont fontPtr) text color = withCString text $ \cstr ->
-    with color $ \colorPtr -> do
-      ptr <- FFI.renderUTF8Blended fontPtr cstr colorPtr
-      handleError "renderUTF8Blended" ptr mkFinalizedSurface
+renderUTF8Blended :: TTFFont -> String -> Color -> IO (Ptr Surface)
+renderUTF8Blended fontPtr text color = withCString text $ \cstr ->
+    with color $ \colorPtr -> FFI.renderUTF8Blended fontPtr cstr colorPtr
+
