@@ -2,6 +2,11 @@
 {-# LANGUAGE EmptyDataDecls #-}
 module Graphics.UI.SDL.TTF.Types where
 
+data KerningStatus
+  = KerningOn
+  | KerningOff
+  deriving (Show,Eq)
+
 data TTFError
   = RenderUTF8Blended
   | RenderUTF8Shaded
@@ -28,7 +33,13 @@ instance Enum TTFStyle where
     toEnum #{const TTF_STYLE_UNDERLINE} = TTFUnderline
     toEnum #{const TTF_STYLE_STRIKETHROUGH} = TTFStrikethrough
     toEnum _ = error "TTFStyle.toEnum: Invalid argument."
-
+    
+-- | Hinting
+--
+-- Font hinting is the use of mathematical instructions to adjust
+-- the display of an outline font so that it lines up with a rasterized grid.
+-- At small screen sizes, with or without antialiasing, hinting is critical
+-- for producing a clear, legible text for human readers.
 data TTFHinting = TTFHNormal | TTFHLight | TTFHMono | TTFHNone
   deriving ( Eq, Ord, Show, Read )
 

@@ -12,6 +12,9 @@ type TTFFont = Ptr ()
 foreign import ccall unsafe "TTF_Init"
   init :: IO CInt
 
+foreign import ccall unsafe "TTF_WasInit"
+  wasInit :: IO CInt
+
 foreign import ccall unsafe "TTF_Quit"
   quit :: IO ()
 
