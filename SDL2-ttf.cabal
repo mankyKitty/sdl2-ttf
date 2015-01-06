@@ -18,7 +18,7 @@ Library
   Exposed-Modules:  Graphics.UI.SDL.TTF.Types,
                     Graphics.UI.SDL.TTF.FFI
                     Graphics.UI.SDL.TTF
-  GHC-Options:      -Wall -Werror -fwarn-tabs -O
+  GHC-Options:      -Wall
   include-dirs:     cbits
   C-sources:        cbits/rendering.c
   extra-libraries:  SDL2, SDL2_ttf
@@ -28,7 +28,7 @@ test-suite test
   main-is:          font_test.hs
   hs-source-dirs:   test
   build-depends:    base >= 3 && <5, sdl2, sdl2-ttf
-  GHC-Options:      -Wall -Werror -fwarn-tabs -O
+  GHC-Options:      -Wall
   
 source-repository head
     type:     git
