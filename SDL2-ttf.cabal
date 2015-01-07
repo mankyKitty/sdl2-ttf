@@ -8,7 +8,7 @@ License:            MIT
 Build-Type:         Simple
 Category:           Foreign binding
 Synopsis:           Binding to libSDL2-ttf
-Description:        TODO
+Description:        Haskell bindings to the sdl2-ttf C++ library <http://www.libsdl.org/projects/SDL_ttf/>.
 Data-files:
 
 Library
