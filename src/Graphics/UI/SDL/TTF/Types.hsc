@@ -7,6 +7,11 @@ data KerningStatus
   | KerningOff
   deriving (Show,Eq)
 
+data FixedWidth
+  = IsFixedW
+  | NotFixedW
+  deriving (Show,Eq)
+
 data TTFError
   = RenderUTF8Blended
   | RenderUTF8Shaded
@@ -17,7 +22,12 @@ data TTFError
   | OpenFont
   deriving Show
 
-data TTFStyle = TTFNormal | TTFBold | TTFItalic | TTFUnderline | TTFStrikethrough
+data TTFStyle
+  = TTFNormal
+  | TTFBold
+  | TTFItalic
+  | TTFUnderline
+  | TTFStrikethrough
   deriving ( Eq, Ord, Show, Read )
 
 instance Enum TTFStyle where
@@ -40,7 +50,11 @@ instance Enum TTFStyle where
 -- the display of an outline font so that it lines up with a rasterized grid.
 -- At small screen sizes, with or without antialiasing, hinting is critical
 -- for producing a clear, legible text for human readers.
-data TTFHinting = TTFHNormal | TTFHLight | TTFHMono | TTFHNone
+data TTFHinting
+  = TTFHNormal
+  | TTFHLight
+  | TTFHMono
+  | TTFHNone
   deriving ( Eq, Ord, Show, Read )
 
 instance Enum TTFHinting where

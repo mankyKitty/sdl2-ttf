@@ -196,7 +196,7 @@ fontKerningEnabled fontPtr = FFI.getFontKerning fontPtr >>= return . toKS
 -- strings of characters, at least a word at a time. Perhaps the only time
 -- to disable this is when kerning is not working for a specific font,
 -- resulting in overlapping glyphs or abnormal spacing within words.
-setFontKerning :: TTFFont       -- ^ Font 
+setFontKerning :: TTFFont       -- ^ Font
                -> KerningStatus -- ^ Desired Kerning status.
                -> IO ()
 setFontKerning fontPtr KerningOn  = FFI.setFontKerning fontPtr 1
@@ -208,7 +208,7 @@ setFontKerning fontPtr KerningOff = FFI.setFontKerning fontPtr 0
 -- style and other typographical features perhaps) contained in the
 -- font itself. It seems to be a useless fact to know, since it can't
 -- be applied in any other SDL_ttf functions. 
-fontFaces :: TTFFont   -- ^ Font  
+fontFaces :: TTFFont   -- ^ Font
           -> IO Int64  -- ^ The number of faces in the font.
 fontFaces fontPtr = liftM fromIntegral $ FFI.fontFaces fontPtr
 
@@ -220,15 +220,19 @@ fontFaces fontPtr = liftM fromIntegral $ FFI.fontFaces fontPtr
 --
 -- @glyph_width * string_length@
 --
-fontFaceIsFixedWidth :: TTFFont  -- ^ Font 
-                     -> IO Bool  -- ^ If font is a fixed width font.
-fontFaceIsFixedWidth fontPtr = liftM (== 0) $ FFI.fontFaceIsFixedWidth fontPtr
+fontFaceIsFixedWidth :: TTFFont       -- ^ Font
+                     -> IO FixedWidth -- ^ If font is a fixed width font.
+fontFaceIsFixedWidth fontPtr =
+  FFI.fontFaceIsFixedWidth fontPtr >>= return . toFW
+  where
+    toFW 1 = IsFixedW
+    toFW _ = NotFixedW
 
 -- | Get the current font face family name from the loaded font.
 --
 -- This function may return a NULL pointer, in which case the information
 -- is not available. 
-fontFaceFamilyName :: TTFFont   -- ^ Font 
+fontFaceFamilyName :: TTFFont   -- ^ Font
                    -> IO String -- ^ The current family name of of the face of the font, or NULL perhaps.
 fontFaceFamilyName fontPtr = FFI.fontFaceFamilyName fontPtr >>= peekCString
 
