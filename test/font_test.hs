@@ -46,20 +46,10 @@ loop window renderer textTexture = do
              SDL.renderCopy renderer textTexture nullPtr loc'
     SDL.renderPresent renderer
 
-    handleEvents window renderer textTexture
-
 pollEvent :: IO (Maybe SDL.Event)
 pollEvent = alloca $ \ptr -> do
   status <- SDL.pollEvent ptr
   if status == 1
     then maybePeek peek ptr
     else return Nothing
-
-handleEvents :: t -> SDL.Renderer -> SDL.Texture -> IO ()
-handleEvents window renderer textTexture = do
-    mbEvent <- pollEvent
-    case mbEvent of
-      Just (SDL.QuitEvent _ _) -> return ()
-      _ -> loop window renderer textTexture
-
 
