@@ -10,6 +10,7 @@ Category:           Foreign binding
 Synopsis:           Binding to libSDL2-ttf
 Description:        Haskell bindings to the sdl2-ttf C++ library <http://www.libsdl.org/projects/SDL_ttf/>.
 Data-files:
+extra-source-files: cbits/rendering.h
 
 Library
   Hs-source-dirs:   src
