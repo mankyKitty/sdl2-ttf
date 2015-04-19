@@ -7,7 +7,7 @@ import Foreign.C.String (withCAString)
 import Foreign (peek,alloca,with,maybePeek,nullPtr)
 
 arial :: String
-arial = "./test/ARIAL.TTF"
+arial = "./examples/ARIAL.TTF"
 
 main :: IO ()
 main = do
@@ -45,6 +45,7 @@ loop window renderer textTexture = do
     _ <- with loc $ \loc' ->
              SDL.renderCopy renderer textTexture nullPtr loc'
     SDL.renderPresent renderer
+    handleEvents window renderer textTexture
 
 pollEvent :: IO (Maybe SDL.Event)
 pollEvent = alloca $ \ptr -> do
@@ -53,3 +54,9 @@ pollEvent = alloca $ \ptr -> do
     then maybePeek peek ptr
     else return Nothing
 
+handleEvents :: t -> SDL.Renderer -> SDL.Texture -> IO ()
+handleEvents window renderer textTexture = do
+  mbEvent <- pollEvent
+  case mbEvent of
+    Just (SDL.QuitEvent _ _) -> return ()
+    _ -> loop window renderer textTexture
