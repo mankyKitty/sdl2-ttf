@@ -17,8 +17,8 @@ Library
   Build-Depends:      base >= 3 && < 5, sdl2
   default-extensions: ForeignFunctionInterface
   Exposed-Modules:    Graphics.UI.SDL.TTF.Types,
-                      Graphics.UI.SDL.TTF.FFI
-                      Graphics.UI.SDL.TTF
+		      Graphics.UI.SDL.TTF.FFI
+		      Graphics.UI.SDL.TTF
   GHC-Options:        -Wall
   include-dirs:       cbits
   C-sources:          cbits/rendering.c
@@ -31,7 +31,7 @@ executable font-test
   build-depends:    base >= 3 && <5, sdl2, sdl2-ttf
   GHC-Options:      -Wall
   default-language: Haskell2010
-  
+
 source-repository head
     type:     git
     location: https://github.com/mankyKitty/sdl2-ttf
