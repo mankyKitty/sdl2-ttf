@@ -12,7 +12,7 @@ Description:        Haskell bindings to the sdl2-ttf C++ library <http://www.lib
 Data-files:
 extra-source-files: cbits/rendering.h
                     examples/ARIAL.TTF
-		    examples/font_test.c
+                    examples/font_test.c
 
 Library
   Hs-source-dirs:     src

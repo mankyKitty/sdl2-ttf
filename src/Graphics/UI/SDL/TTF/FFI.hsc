@@ -4,8 +4,8 @@ module Graphics.UI.SDL.TTF.FFI where
 import Foreign.C
 import Foreign.Ptr
 
-import qualified Graphics.UI.SDL.Types as SDL
-import Graphics.UI.SDL.Types (Color)
+import qualified SDL.Raw.Types as SDL
+import SDL.Raw.Types (Color)
 
 type TTFFont = Ptr ()
 

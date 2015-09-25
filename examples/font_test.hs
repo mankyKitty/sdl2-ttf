@@ -1,7 +1,7 @@
 module Main where
 
 import qualified Graphics.UI.SDL.TTF as TTF
-import qualified Graphics.UI.SDL     as SDL
+import qualified SDL.Raw             as SDL
 
 import Foreign.C.String (withCAString)
 import Foreign (peek,alloca,with,maybePeek,nullPtr)
