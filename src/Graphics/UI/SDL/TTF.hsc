@@ -38,7 +38,7 @@ import Graphics.UI.SDL.TTF.FFI (TTFFont)
 
 import qualified Graphics.UI.SDL.TTF.FFI as FFI
 import Graphics.UI.SDL.TTF.Types
-import Graphics.UI.SDL.Types
+import SDL.Raw.Types
 
 import Prelude hiding (init)
 
