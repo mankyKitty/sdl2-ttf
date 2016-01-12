@@ -34,11 +34,15 @@ import Foreign.Ptr
 import Control.Monad
 import Data.Int
 
+import qualified SDL as SDL
+import qualified SDL.Raw as Raw
+import SDL.Raw (Color(..))
+
 import Graphics.UI.SDL.TTF.FFI (TTFFont)
 
 import qualified Graphics.UI.SDL.TTF.FFI as FFI
 import Graphics.UI.SDL.TTF.Types
-import SDL.Raw.Types
+-- import SDL.Raw.Types
 
 import Prelude hiding (init)
 
@@ -280,81 +284,82 @@ sizeUNICODE = peekInts FFI.sizeUNICODE
 renderTextSolid :: TTFFont          -- ^ Font 
                 -> String           -- ^ The LATIN1 null terminated string to render.
                 -> Color            -- ^ The color to render the text in. Colormap index 1.
-                -> IO (Ptr Surface) -- ^ Pointer to a new SDL_Surface. NULL is returned on errors.
+                -> IO SDL.Surface -- ^ The returned high level SDL.Surface
 renderTextSolid fontPtr text fg = withCString text $ \cstr -> do
-    with fg $ \colorPtr -> FFI.renderTextSolid fontPtr cstr colorPtr
+    --with fg $ \colorPtr -> FFI.renderTextSolid fontPtr cstr colorPtr
+    with fg $ \colorPtr -> unmanagedSurface <$> FFI.renderTextSolid fontPtr cstr colorPtr
     
--- | Render the LATIN1 encoded text, using the Shaded mode
---
--- Render the LATIN1 encoded text using font with fg color onto a new surface,
--- using the Shaded mode.
---
--- @The caller (you!) is responsible for freeing any returned surface.@
-renderTextShaded :: TTFFont          -- ^ Font 
-                 -> String           -- ^ The LATIN1 null terminated string to render.
-                 -> Color            -- ^ The color to render the text in. Colormap index 1.
-                 -> Color            -- ^ The color to render the background box in. Colormap index 0.
-                 -> IO (Ptr Surface) -- ^ Pointer to a new SDL_Surface. NULL is returned on errors.
-renderTextShaded fontPtr text fg bg = withCString text $ \cstr ->
-    with fg $ \fgColorPtr ->
-      with bg $ \bgColorPtr ->
-        FFI.renderTextShaded fontPtr cstr fgColorPtr bgColorPtr
-
--- | Render the LATIN1 encoded text, using the Blended mode
---
--- Render the LATIN1 encoded text using font with fg color onto a new surface,
--- using the Blended mode.
---
--- @The caller (you!) is responsible for freeing any returned surface.@
-renderTextBlended :: TTFFont          -- ^ Font 
-                  -> String           -- ^ The LATIN1 null terminated string to render.
-                  -> Color            -- ^ The color to render the text in. Colormap index 1.
-                  -> IO (Ptr Surface) -- ^ Pointer to a new SDL_Surface. NULL is returned on errors.
-renderTextBlended fontPtr text color = withCString text $ \cstr ->
-    with color $ \colorPtr -> FFI.renderTextBlended fontPtr cstr colorPtr
-
--- | Render the UTF8 encoded text, using the Solid mode
---
--- Render the UTF8 encoded text using font with fg color onto a new surface,
--- using the Solid mode.
---
--- @The caller (you!) is responsible for freeing any returned surface.@
-renderUTF8Solid :: TTFFont            -- ^ Font 
-                  -> String           -- ^ The UTF8 null terminated string to render.
-                  -> Color            -- ^ The color to render the text in. Colormap index 1.
-                  -> IO (Ptr Surface) -- ^ Pointer to a new SDL_Surface. NULL is returned on errors.
-renderUTF8Solid fontPtr text fg = withCString text $ \cstr -> do
-    with fg $ \colorPtr -> FFI.renderUTF8Solid fontPtr cstr colorPtr
-    
--- | Render the UTF8 encoded text, using the Shaded mode
---
--- Render the UTF8 encoded text using font with fg color onto a new surface,
--- using the Shaded mode.
---
--- @The caller (you!) is responsible for freeing any returned surface.@
-renderUTF8Shaded :: TTFFont          -- ^ Font 
-                 -> String           -- ^ The UTF8 null terminated string to render.
-                 -> Color            -- ^ The color to render the text in. Colormap index 1.
-                 -> Color            -- ^ The color to render the background box in. Colormap index 0.
-                 -> IO (Ptr Surface) -- ^ Pointer to a new SDL_Surface. NULL is returned on errors.
-renderUTF8Shaded fontPtr text fg bg = withCString text $ \cstr ->
-    with fg $ \fgColorPtr ->
-      with bg $ \bgColorPtr ->
-        FFI.renderUTF8Shaded fontPtr cstr fgColorPtr bgColorPtr
-
--- | Render the UTF8 encoded text, using the Blended mode
---
--- Render the UTF8 encoded text using font with fg color onto a new surface,
--- using the Blended mode.
---
--- @The caller (you!) is responsible for freeing any returned surface.@
-renderUTF8Blended :: TTFFont          -- ^ Font 
-                  -> String           -- ^ The UTF8 null terminated string to render.
-                  -> Color            -- ^ The color to render the text in. Colormap index 1.
-                  -> IO (Ptr Surface) -- ^ Pointer to a new SDL_Surface. NULL is returned on errors.
-renderUTF8Blended fontPtr text color = withCString text $ \cstr ->
-    with color $ \colorPtr -> FFI.renderUTF8Blended fontPtr cstr colorPtr
-
+-- -- | Render the LATIN1 encoded text, using the Shaded mode
+-- --
+-- -- Render the LATIN1 encoded text using font with fg color onto a new surface,
+-- -- using the Shaded mode.
+-- --
+-- -- @The caller (you!) is responsible for freeing any returned surface.@
+-- renderTextShaded :: TTFFont          -- ^ Font 
+--                  -> String           -- ^ The LATIN1 null terminated string to render.
+--                  -> Color            -- ^ The color to render the text in. Colormap index 1.
+--                  -> Color            -- ^ The color to render the background box in. Colormap index 0.
+--                  -> IO (Ptr SDL.Surface) -- ^ Pointer to a new SDL_SDL.Surface. NULL is returned on errors.
+-- renderTextShaded fontPtr text fg bg = withCString text $ \cstr ->
+--     with fg $ \fgColorPtr ->
+--       with bg $ \bgColorPtr ->
+--         FFI.renderTextShaded fontPtr cstr fgColorPtr bgColorPtr
+-- 
+-- -- | Render the LATIN1 encoded text, using the Blended mode
+-- --
+-- -- Render the LATIN1 encoded text using font with fg color onto a new surface,
+-- -- using the Blended mode.
+-- --
+-- -- @The caller (you!) is responsible for freeing any returned surface.@
+-- renderTextBlended :: TTFFont          -- ^ Font 
+--                   -> String           -- ^ The LATIN1 null terminated string to render.
+--                   -> Color            -- ^ The color to render the text in. Colormap index 1.
+--                   -> IO (Ptr SDL.Surface) -- ^ Pointer to a new SDL_SDL.Surface. NULL is returned on errors.
+-- renderTextBlended fontPtr text color = withCString text $ \cstr ->
+--     with color $ \colorPtr -> FFI.renderTextBlended fontPtr cstr colorPtr
+-- 
+-- -- | Render the UTF8 encoded text, using the Solid mode
+-- --
+-- -- Render the UTF8 encoded text using font with fg color onto a new surface,
+-- -- using the Solid mode.
+-- --
+-- -- @The caller (you!) is responsible for freeing any returned surface.@
+-- renderUTF8Solid :: TTFFont            -- ^ Font 
+--                   -> String           -- ^ The UTF8 null terminated string to render.
+--                   -> Color            -- ^ The color to render the text in. Colormap index 1.
+--                   -> IO (Ptr SDL.Surface) -- ^ Pointer to a new SDL_SDL.Surface. NULL is returned on errors.
+-- renderUTF8Solid fontPtr text fg = withCString text $ \cstr -> do
+--     with fg $ \colorPtr -> FFI.renderUTF8Solid fontPtr cstr colorPtr
+--     
+-- -- | Render the UTF8 encoded text, using the Shaded mode
+-- --
+-- -- Render the UTF8 encoded text using font with fg color onto a new surface,
+-- -- using the Shaded mode.
+-- --
+-- -- @The caller (you!) is responsible for freeing any returned surface.@
+-- renderUTF8Shaded :: TTFFont          -- ^ Font 
+--                  -> String           -- ^ The UTF8 null terminated string to render.
+--                  -> Color            -- ^ The color to render the text in. Colormap index 1.
+--                  -> Color            -- ^ The color to render the background box in. Colormap index 0.
+--                  -> IO (Ptr SDL.Surface) -- ^ Pointer to a new SDL_SDL.Surface. NULL is returned on errors.
+-- renderUTF8Shaded fontPtr text fg bg = withCString text $ \cstr ->
+--     with fg $ \fgColorPtr ->
+--       with bg $ \bgColorPtr ->
+--         FFI.renderUTF8Shaded fontPtr cstr fgColorPtr bgColorPtr
+-- 
+-- -- | Render the UTF8 encoded text, using the Blended mode
+-- --
+-- -- Render the UTF8 encoded text using font with fg color onto a new surface,
+-- -- using the Blended mode.
+-- --
+-- -- @The caller (you!) is responsible for freeing any returned surface.@
+-- renderUTF8Blended :: TTFFont          -- ^ Font 
+--                   -> String           -- ^ The UTF8 null terminated string to render.
+--                   -> Color            -- ^ The color to render the text in. Colormap index 1.
+--                   -> IO (Ptr SDL.Surface) -- ^ Pointer to a new SDL_SDL.Surface. NULL is returned on errors.
+-- renderUTF8Blended fontPtr text color = withCString text $ \cstr ->
+--     with color $ \colorPtr -> FFI.renderUTF8Blended fontPtr cstr colorPtr
+-- 
 peekInts 
   :: (FFI.TTFFont -> CString -> Ptr CInt -> Ptr CInt -> IO CInt)
   -> TTFFont
@@ -368,3 +373,8 @@ peekInts fn fontPtr text = do
         w <- peek wPtr
         h <- peek hPtr
         return (fromIntegral w, fromIntegral h)
+
+-- | Straight from the code of "sdl2" package, which is not exported. It will make a high level Surface from a Raw Surface. I will move this to somewhere safe, soon
+unmanagedSurface :: Ptr Raw.Surface -> SDL.Surface
+unmanagedSurface s = SDL.Surface s Nothing
+
