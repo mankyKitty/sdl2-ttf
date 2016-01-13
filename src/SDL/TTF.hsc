@@ -46,6 +46,8 @@ import SDL.TTF.Internals
 import Control.Monad.IO.Class
 import Prelude hiding (init)
 
+import Debug.Trace
+
 -- | Initialize the truetype font API.
 -- This must be called before using other functions in this library, 
 -- except TTF_WasInit.
@@ -61,7 +63,7 @@ init = liftIO $ FFI.init
 -- initializing twice in a row. Or use this to determine if you
 -- need to call TTF_Quit.
 wasInit :: MonadIO m => m Bool
-wasInit = liftIO $ FFI.wasInit >>= return . (==1)
+wasInit = liftIO $ FFI.wasInit >>= return . (/=0)
 
 -- | Shut down the TTF system.
 -- Shutdown and cleanup the truetype font API.
