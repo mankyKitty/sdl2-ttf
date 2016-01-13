@@ -17,7 +17,7 @@ extra-source-files: cbits/rendering.h
 
 Library
   Hs-source-dirs:     src
-  Build-Depends:      base >= 3 && < 5, sdl2 >= 2
+  Build-Depends:      base >= 3 && < 5, sdl2 >= 2, transformers
   default-extensions: ForeignFunctionInterface
   Exposed-Modules:    SDL.TTF.Types,
                       SDL.TTF.FFI
@@ -38,4 +38,4 @@ executable font-test
 
 source-repository head
     type:     git
-    location: https://github.com/mankyKitty/sdl2-ttf
+    location: https://github.com/carldong/sdl2-ttf

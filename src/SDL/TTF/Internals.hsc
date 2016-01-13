@@ -3,24 +3,25 @@ module SDL.TTF.Internals where
 import Foreign.C.String
 import Foreign.C.Types (CInt)
 import Foreign.Marshal.Alloc
-import Foreign.Marshal.Utils
+-- import Foreign.Marshal.Utils()
 import Foreign.Storable
 import Foreign.Ptr
 import Control.Monad
+import Control.Monad.IO.Class
 
 import qualified SDL as SDL
 import qualified SDL.Raw as Raw
 
 --import SDL.TTF.FFI (TTFFont)
 import qualified SDL.TTF.FFI as FFI
-import SDL.TTF.Types
+--import SDL.TTF.Types
 
-peekInts 
-  :: (FFI.TTFFont -> CString -> Ptr CInt -> Ptr CInt -> IO CInt)
+peekInts :: MonadIO m =>
+     (FFI.TTFFont -> CString -> Ptr CInt -> Ptr CInt -> IO CInt)
   -> FFI.TTFFont
   -> String
-  -> IO (Int,Int)
-peekInts fn fontPtr text = do
+  -> m (Int,Int)
+peekInts fn fontPtr text = liftIO $ do
     alloca $ \wPtr ->
       alloca $ \hPtr -> do
         -- TODO: handle errors
