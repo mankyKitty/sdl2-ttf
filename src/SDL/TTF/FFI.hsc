@@ -1,5 +1,5 @@
 #include "SDL2/SDL_ttf.h"
-module Graphics.UI.SDL.TTF.FFI where
+module SDL.TTF.FFI where
 
 import Foreign.C
 import Foreign.Ptr
