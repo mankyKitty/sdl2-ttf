@@ -27,16 +27,15 @@ module SDL.TTF where
 
 import Foreign.C.String
 import Foreign.C.Types (CInt)
-import Foreign.Marshal.Alloc
+--import Foreign.Marshal.Alloc
 import Foreign.Marshal.Utils
-import Foreign.Storable
-import Foreign.Ptr
+--import Foreign.Storable
+--import Foreign.Ptr
 import Control.Monad
 import Data.Int
 
 import qualified SDL as SDL
 import qualified SDL.Raw as Raw
-import SDL.Raw (Color(..))
 
 import SDL.TTF.FFI (TTFFont)
 
@@ -62,7 +61,7 @@ init = liftIO $ FFI.init
 -- initializing twice in a row. Or use this to determine if you
 -- need to call TTF_Quit.
 wasInit :: MonadIO m => m Bool
-wasInit = liftIO $ FFI.init >>= return . (==1)
+wasInit = liftIO $ FFI.wasInit >>= return . (==1)
 
 -- | Shut down the TTF system.
 -- Shutdown and cleanup the truetype font API.
@@ -284,7 +283,7 @@ sizeUNICODE = peekInts FFI.sizeUNICODE
 -- @The caller (you!) is responsible for freeing any returned surface.@
 renderTextSolid :: MonadIO m => TTFFont          -- ^ Font 
                 -> String           -- ^ The LATIN1 null terminated string to render.
-                -> Color            -- ^ The color to render the text in. Colormap index 1.
+                -> Raw.Color            -- ^ The color to render the text in. Colormap index 1.
                 -> m SDL.Surface -- ^ The returned high level SDL.Surface
 renderTextSolid fontPtr text fg = liftIO $ withCString text $ \cstr -> do
     --with fg $ \colorPtr -> FFI.renderTextSolid fontPtr cstr colorPtr
@@ -298,8 +297,8 @@ renderTextSolid fontPtr text fg = liftIO $ withCString text $ \cstr -> do
 -- @The caller (you!) is responsible for freeing any returned surface.@
 renderTextShaded :: MonadIO m => TTFFont          -- ^ Font 
                  -> String           -- ^ The LATIN1 null terminated string to render.
-                 -> Color            -- ^ The color to render the text in. Colormap index 1.
-                 -> Color            -- ^ The color to render the background box in. Colormap index 0.
+                 -> Raw.Color            -- ^ The color to render the text in. Colormap index 1.
+                 -> Raw.Color            -- ^ The color to render the background box in. Colormap index 0.
                  -> m SDL.Surface -- ^ Pointer to a new SDL_SDL.Surface. NULL is returned on errors.
 renderTextShaded fontPtr text fg bg = liftIO $ withCString text $ \cstr ->
     with fg $ \fgColorPtr ->
@@ -314,7 +313,7 @@ renderTextShaded fontPtr text fg bg = liftIO $ withCString text $ \cstr ->
 -- @The caller (you!) is responsible for freeing any returned surface.@
 renderTextBlended :: MonadIO m => TTFFont          -- ^ Font 
                   -> String           -- ^ The LATIN1 null terminated string to render.
-                  -> Color            -- ^ The color to render the text in. Colormap index 1.
+                  -> Raw.Color            -- ^ The color to render the text in. Colormap index 1.
                   -> m SDL.Surface -- ^ Pointer to a new SDL_SDL.Surface. NULL is returned on errors.
 renderTextBlended fontPtr text color = liftIO $ withCString text $ \cstr ->
     with color $ \colorPtr -> unmanagedSurface <$> FFI.renderTextBlended fontPtr cstr colorPtr
@@ -327,7 +326,7 @@ renderTextBlended fontPtr text color = liftIO $ withCString text $ \cstr ->
 -- @The caller (you!) is responsible for freeing any returned surface.@
 renderUTF8Solid :: MonadIO m => TTFFont            -- ^ Font 
                   -> String           -- ^ The UTF8 null terminated string to render.
-                  -> Color            -- ^ The color to render the text in. Colormap index 1.
+                  -> Raw.Color            -- ^ The color to render the text in. Colormap index 1.
                   -> m SDL.Surface -- ^ Pointer to a new SDL_SDL.Surface. NULL is returned on errors.
 renderUTF8Solid fontPtr text fg = liftIO $ withCString text $ \cstr -> do
     with fg $ \colorPtr -> unmanagedSurface <$> FFI.renderUTF8Solid fontPtr cstr colorPtr
@@ -340,8 +339,8 @@ renderUTF8Solid fontPtr text fg = liftIO $ withCString text $ \cstr -> do
 -- @The caller (you!) is responsible for freeing any returned surface.@
 renderUTF8Shaded :: MonadIO m => TTFFont          -- ^ Font 
                  -> String           -- ^ The UTF8 null terminated string to render.
-                 -> Color            -- ^ The color to render the text in. Colormap index 1.
-                 -> Color            -- ^ The color to render the background box in. Colormap index 0.
+                 -> Raw.Color            -- ^ The color to render the text in. Colormap index 1.
+                 -> Raw.Color            -- ^ The color to render the background box in. Colormap index 0.
                  -> m SDL.Surface -- ^ Pointer to a new SDL_SDL.Surface. NULL is returned on errors.
 renderUTF8Shaded fontPtr text fg bg = liftIO $ withCString text $ \cstr ->
     with fg $ \fgColorPtr ->
@@ -356,7 +355,7 @@ renderUTF8Shaded fontPtr text fg bg = liftIO $ withCString text $ \cstr ->
 -- @The caller (you!) is responsible for freeing any returned surface.@
 renderUTF8Blended :: MonadIO m => TTFFont          -- ^ Font 
                   -> String           -- ^ The UTF8 null terminated string to render.
-                  -> Color            -- ^ The color to render the text in. Colormap index 1.
+                  -> Raw.Color            -- ^ The color to render the text in. Colormap index 1.
                   -> m SDL.Surface -- ^ Pointer to a new SDL_SDL.Surface. NULL is returned on errors.
 renderUTF8Blended fontPtr text color = liftIO $ withCString text $ \cstr ->
     with color $ \colorPtr -> unmanagedSurface <$> FFI.renderUTF8Blended fontPtr cstr colorPtr

@@ -5,8 +5,8 @@ import qualified SDL.TTF as TTF
 import qualified SDL.Raw             as Raw
 import qualified SDL as SDL
 
-import Foreign.C.String (withCAString)
-import Foreign (peek,alloca,with,maybePeek,nullPtr)
+--import Foreign.C.String (withCAString)
+--import Foreign (peek,alloca,with,maybePeek,nullPtr)
 
 import Linear.V2
 import Linear.Affine (Point(..))
@@ -21,6 +21,8 @@ main = do
     renderer <- SDL.createRenderer window 0 SDL.defaultRenderer
 
     TTF.withInit $ do
+      inited <- TTF.wasInit
+      if not inited then error "[Bug] Font system not initialized" else return ()
       font <- TTF.openFont arial 150 -- Pt size for retina screen. :<
       textSurface <- TTF.renderUTF8Solid font "some text" (Raw.Color 255 255 255 0)
       textTexture <- SDL.createTextureFromSurface renderer textSurface
