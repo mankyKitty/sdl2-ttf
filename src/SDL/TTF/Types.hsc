@@ -1,6 +1,6 @@
 #include "SDL2/SDL_ttf.h"
 {-# LANGUAGE EmptyDataDecls #-}
-module Graphics.UI.SDL.TTF.Types where
+module SDL.TTF.Types where
 
 data KerningStatus
   = KerningOn
