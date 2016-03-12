@@ -1,0 +1,33 @@
+module SDL.TTF.Internals where
+
+import Foreign.C.String
+import Foreign.C.Types (CInt)
+import Foreign.Marshal.Alloc
+import Foreign.Storable
+import Foreign.Ptr
+import Control.Monad
+import Control.Monad.IO.Class
+
+import qualified SDL as SDL
+import qualified SDL.Raw as Raw
+
+import qualified SDL.TTF.FFI as FFI
+
+peekInts
+  :: MonadIO m
+  => (FFI.TTFFont -> CString -> Ptr CInt -> Ptr CInt -> IO CInt)
+  -> FFI.TTFFont
+  -> String
+  -> m (Int,Int)
+peekInts fn fontPtr text = liftIO $ do
+    alloca $ \wPtr ->
+      alloca $ \hPtr -> do
+        -- TODO: handle errors
+        void $ withCString text $ \cstr -> fn fontPtr cstr wPtr hPtr
+        w <- peek wPtr
+        h <- peek hPtr
+        return (fromIntegral w, fromIntegral h)
+
+-- | Straight from the code of "sdl2" package, which is not exported. It will make a high level Surface from a Raw Surface. I will move this to somewhere safe, soon
+unmanagedSurface :: Ptr Raw.Surface -> SDL.Surface
+unmanagedSurface s = SDL.Surface s Nothing
